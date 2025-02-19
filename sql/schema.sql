@@ -1,5 +1,21 @@
-CREATE TABLE IF NOT EXISTS public.categories (
-  id serial primary key,
-  name varchar(64) not null unique,
-  created timestamp with time zone not null default current_timestamp
+-- sql/schema.sql
+CREATE TABLE IF NOT EXISTS categories (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE CHECK (name <> ''),
+  created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS questions (
+  id SERIAL PRIMARY KEY,
+  question TEXT NOT NULL,
+  category_id INTEGER REFERENCES categories(id),
+  created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS answers (
+  id SERIAL PRIMARY KEY,
+  answer TEXT NOT NULL,
+  correct BOOLEAN NOT NULL DEFAULT false,
+  question_id INTEGER REFERENCES questions(id),
+  created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -3,6 +3,7 @@ import { router } from './routes.js';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
 
 dotenv.config();
 
@@ -20,7 +21,8 @@ app.set('view engine', 'ejs');
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
-
+app.use(helmet());
+app.disable('x-powered-by');
 app.use('/', router);
 
 const port = process.env.PORT || 3000;
