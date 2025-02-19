@@ -16,38 +16,44 @@ router.get('/', async (req, res) => {
 
 router.get('/spurningar/:category', (req, res) => {
   // TEMP EKKI READY FYRIR PRODUCTION
-  const title = req.params.category;
-  res.render('category', { title });
+  const category = req.params.category;
+  res.render('category', { title: category });
 });
 
 router.get('/form', (req, res) => {
   res.render('form', { title: 'Búa til flokk' });
 });
 
-router.post('/form', async (req, res) => {
-  const { name } = req.body;
+router.post('/form', async (req, res, next) => {
+  try{
+    const { name } = req.body;
+    // Hér þarf að setja upp validation, hvað ef name er tómt? hvað ef það er allt handritið að BEE MOVIE?
+    // Hvað ef það er SQL INJECTION? HVAÐ EF ÞAÐ ER EITTHVAÐ ANNAÐ HRÆÐILEGT?!?!?!?!?!
+    // TODO VALIDATION OG HUGA AÐ ÖRYGGI
 
-  console.log(name);
+    // Ef validation klikkar, senda skilaboð um það á notanda
 
-  // Hér þarf að setja upp validation, hvað ef name er tómt? hvað ef það er allt handritið að BEE MOVIE?
-  // Hvað ef það er SQL INJECTION? HVAÐ EF ÞAÐ ER EITTHVAÐ ANNAÐ HRÆÐILEGT?!?!?!?!?!
-  // TODO VALIDATION OG HUGA AÐ ÖRYGGI
+    // Ef allt OK, búa til í gagnagrunn.
+    if(!name || name.trim().length < 3 || name.trim().length > 255){
+      return res.render('form',{
+        title: 'Búa til flokk',
+        error: 'Nafn þarf að vera á milli 3 og 255 stafir'});
+    }
 
-  // Ef validation klikkar, senda skilaboð um það á notanda
+    const sanitizedName = name.trim();
+    
+    const env = environment(process.env, logger);
+    if (!env) {
+      return res.status(500).send('Server configuration error');
+    }
 
-  // Ef allt OK, búa til í gagnagrunn.
-  const env = environment(process.env, logger);
-  if (!env) {
-    process.exit(1);
-  }
+    const db = getDatabase();
+    const result = await db?.query('INSERT INTO categories (name) VALUES ($1)',
+       [sanitizedName ]);
+    console.log(result);
 
-  const db = getDatabase();
-
-  const result = await db?.query('INSERT INTO categories (name) VALUES ($1)', [
-    name,
-  ]);
-
-  console.log(result);
-
-  res.render('form-created', { title: 'Flokkur búinn til' });
+    res.render('form-created', { title: 'Flokkur búinn til' });
+} catch (error) {
+  next(error);
+}
 });

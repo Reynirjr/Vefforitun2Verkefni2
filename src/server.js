@@ -18,13 +18,13 @@ const viewsPath = join(__dirname, 'views');
 app.set('views', viewsPath);
 app.set('view engine', 'ejs');
 
+app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/', router);
 
-const hostname = '127.0.0.1';
 const port = process.env.PORT || 3000;
 
-app.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });

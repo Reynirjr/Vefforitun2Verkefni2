@@ -1,5 +1,25 @@
-<%- include('header') -%>
+<!doctype html>
+<html lang="is">
 
-spurnigaflokkur!
+<head>
+  <meta charset="utf-8">
+  <title><%= locals.title ?? '' %> — Spurningavefurinn</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <main>
+
+    <header>
+      <h1><%= locals.title ?? '' %></h1>
+
+      <ul>
+        <li><a href="/">Forsíða</a></li>
+        <li><a href="/form">Senda inn spurningu</a></li>
+      </ul>
+    </header>
+
+spurnigaflokkur! 
 
 <%- include('footer') -%>
