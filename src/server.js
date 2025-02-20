@@ -25,6 +25,15 @@ app.use(helmet());
 app.disable('x-powered-by');
 app.use('/', router);
 
+app.use((req, res) => {
+  res.status(404).render('404', { title: 'Síða fannst ekki' });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).render('error', { title: 'Villa', error: err });
+});
+
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {

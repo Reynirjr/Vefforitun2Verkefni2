@@ -20,29 +20,35 @@
       </ul>
     </header>
 
-    <section>
-      <h2>Spurningar fyrir flokkið</h2>
-      
+    <section class="spurningar">
+    <h2>Spurningar!</h2>
+
+    
+
       <% if (questions.length === 0) { %>
         <p>Engar spurningar fundust fyrir þennan flokk.</p>
       <% } else { %>
-        <form method="post" action="/spurningar/answer">
-          <% questions.forEach((question) => { %>
-            <div class="question">
-              <h3><%= question.question %></h3>
-              <% question.answers.forEach((answer, index) => { %>
-                <div class="answer-option">
-                    <input 
-                    type="radio" 
-                    name="selectedAnswers[<%= question.id %>]" 
-                    id="q<%= question.id %>_a<%= index %>" 
-                    value="<%= index %>">
-                  <label for="q<%= question.id %>_a<%= index %>"><%= answer.answer %></label>
+        <form method="post" action="/spurningar/<%= categoryId %>/answer">
+            <% questions.forEach((question) => { %>
+                <div class="question">
+                  <h3><%= question.question %></h3>
+                  <% question.answers.forEach((answer, index) => { %>
+                    <div class="answer-option">
+                      <input 
+                        type="radio" 
+                        name="selectedAnswers[<%= question.id %>]" 
+                        id="q<%= question.id %>_a<%= index %>" 
+                        value="<%= index %>"
+                        required
+                      >
+                      <label for="q<%= question.id %>_a<%= index %>">
+                        <%= answer.answer %>
+                      </label>
+                    </div>
+                  <% }); %>
                 </div>
               <% }); %>
-            </div>
-          <% }); %>
-          <button type="submit" class="btn">Senda svar</button>
+              <button type="submit" class="btn">Senda svar</button>
         </form>
       <% } %>
       
