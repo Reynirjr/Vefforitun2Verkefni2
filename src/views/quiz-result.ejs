@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title><%= locals.title ?? '' %> — Spurningavefurinn</title>
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="../../styles.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
@@ -15,18 +15,16 @@
       <h1><%= locals.title ?? '' %></h1>
 
       <ul>
+        <li><a href="/">Forsíða</a></li>
         <li><a href="/form">Senda inn spurningu</a></li>
       </ul>
-    </header>
+</header>
 
-
-<script src="./main.js" defer></script>
-<ul class="index-list">
-  <% for (const category of categories) { %>
-    <li><a href="/spurningar/<%=category.id%>"><%=category.name%></a></li>
-  <% } %>
-</ul>
-
-<div class="gun"></div>
+<section>
+  <h2>Niðurstaða Svara</h2>
+  <p><%= message %></p>
+  <p>You got <%= correctCount %> out of <%= total %> questions correct.</p>
+  <a href="/">Til baka</a>
+</section>
 
 <%- include('footer') -%>

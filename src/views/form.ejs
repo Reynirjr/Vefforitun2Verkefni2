@@ -1,21 +1,52 @@
 <%- include('header') -%>
 
-<form method="post" action="/form">
+<section>
+  <h2>Bæta við spurningu</h2>
 
-  <label for="name">Heiti flokks:</label>
-  <input type="text" id="name" name="name">
-  <input type="number" id="name" name="number">
-  <label>rétt svar #1: <input type="radio" id="name" name="rett_svar" value="1"></label>
-  <label>rétt svar #2: <input type="radio" id="name" name="rett_svar" value="1"></label>
-  <label>rétt svar #3: <input type="radio" id="name" name="rett_svar" value="1"></label>
+  <% if (errors && errors.length > 0) { %>
+    <h3 class="errors__title">Villur við skráningu:</h3>
+    <ul class="errors">
+      <% errors.forEach((error) => { %>
+        <li class="error">
+          <label for="<%= error.path %>"><%= error.msg %></label>
+        </li>
+      <% }); %>
+    </ul>
+  <% } %>
 
-  <input type="checkbox" id="name" name="checkbox">
-  <select>
-    <option>foo</option>
-    <option value="foobar">bar</option>
-  </select>
-  <textarea name="text"></textarea>
-  <button type="submit">Búa til flokk</button>
-</form>
+  <form method="post" action="/form" class="form">
+    <div class="field<%= invalidFields.includes('question') ? ' invalid' : '' %>">
+      <label for="question">Spurning:</label>
+      <textarea id="question" name="question"><%= data.question || '' %></textarea>
+    </div>
+    <div class="field<%= invalidFields.includes('category') ? ' invalid' : '' %>">
+      <label for="category">Flokkur:</label>
+      <select id="category" name="category">
+        <option value="">--Veldu flokk--</option>
+        <% categories.forEach((cat) => { %>
+          <option value="<%= cat.id %>" <%= (data.category == cat.id) ? 'selected' : '' %>>
+            <%= cat.name %>
+          </option>
+        <% }); %>
+      </select>
+    </div>
+    <div class="answers">
+      <% for (let i = 0; i < 4; i++) { %>
+        <div class="field<%= invalidFields.includes(`answers[${i}]`) ? ' invalid' : '' %>">
+          <label for="answer-<%= i %>">Svar <%= i + 1 %></label>
+          <textarea name="answers[]" id="answer-<%= i %>"><%= data.answers && data.answers[i] ? data.answers[i] : '' %></textarea>
+          <label class="correct">
+            Rétt svar
+            <input type="radio" name="correctAnswer" value="<%= i %>" <%= (data.correctAnswer == i) ? 'checked' : '' %>>
+          </label>
+        </div>
+      <% } %>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn">Skrá spurningu</button>
+      <a href="/" class="btn-link">Til baka</a>
+    </div>
+  </form>
+</section>
 
 <%- include('footer') -%>
