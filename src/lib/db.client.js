@@ -20,13 +20,19 @@ export class Database {
   pool = null;
 
   open() {
-    this.pool = new pg.Pool({ connectionString: this.connectionString });
-
+    // Check if the connection is remote (i.e., not localhost)
+    const isLocal = this.connectionString.includes('localhost');
+    this.pool = new pg.Pool({
+      connectionString: this.connectionString,
+      ssl: isLocal ? false : { rejectUnauthorized: false },
+    });
+  
     this.pool.on('error', (err) => {
       this.logger.error('error in database pool', err);
       this.close();
     });
   }
+  
 
   /**
    * Close the database connection.
