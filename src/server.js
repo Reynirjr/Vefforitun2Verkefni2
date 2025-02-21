@@ -29,13 +29,16 @@ app.use((req, res) => {
   res.status(404).render('404', { title: 'Síða fannst ekki' });
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error(err);
   res.status(500).render('error', { title: 'Villa', error: err });
 });
 
-const port = process.env.PORT || 3000;
+if (!process.env.NETLIFY) {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+export default app;

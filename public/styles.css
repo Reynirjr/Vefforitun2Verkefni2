@@ -92,11 +92,54 @@ body {
     transform: translateY(-2px);
   }
 
-form{
+.form-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1em;
+  margin-top: 2em;
+  padding: 1em; 
+}
+
+.field{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 0.5em; 
+  width: 100%; 
+}
+
+.field label {
+  font-weight: bold;
+  margin-bottom: 0.25em;
+}
+
+.field input,
+.field textarea,
+.field select {
+  padding: 0.75em;
+  border: 1px solid #000;
+  border-radius: 5px;
+  font-size: 1em;
+  width: 100%; 
+  box-sizing: border-box; 
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch; 
+  gap: 1em;
+  width: 100%;
+  max-width: 600px; 
 }
 
 .spurningar{
@@ -108,6 +151,34 @@ form{
   gap: 1em;
 }
 
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 100%;
+}
+
+
+
+.answers .field label.correct {
+  margin-top: 0.5em;
+  display: flex;
+  align-items: center;
+
+}
+
+.answers .field label.correct input[type="radio"] {
+  scale: 3;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 1em;
+}
 
 .question {
   margin-bottom: 1em;
@@ -166,6 +237,44 @@ form{
 .btn:hover {
   background-color: #000;
   color: #ffd700;
+}
+
+
+
+.results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2em;
+  text-align: center;
+  gap: 1em;
+  height: 50vh;
+}
+
+.results a{
+  margin-top: 2em;
+  text-align: center;
+  text-decoration: none;
+  color: #000000;
+  font-size: large;
+  background-color: #ffd700;
+  border: 1px solid #000;
+  padding: 1em;
+  border-radius: 5px;
+}
+
+.results a:hover{
+  background-color: #000000;
+  color: #ffd700;
+}
+
+.results section{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+  width: 100%;
+  max-width: 600px;
 }
 
 /*extras*/

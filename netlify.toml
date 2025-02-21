@@ -1,0 +1,7 @@
+
+[build]
+  command = "npm run build"  # or a command that builds your project; if none, you can use "npm install"
+  publish = "public"         # for your static assets
+
+[functions]
+  directory = "netlify/functions"

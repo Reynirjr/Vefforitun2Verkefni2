@@ -151,88 +151,67 @@ async function createQuestionRoute(req, res, next) {
     next(error);
   }
  
-}
-
-async function answerAllQuestionsRoute(req, res, next) {
+}async function answerAllQuestionsRoute(req, res, next) {
   try {
-    const categoryId = req.params.category;
-    const selectedAnswers = req.body.selectedAnswers || {};
-
     const db = getDatabase();
     let total = 0;
     let correctCount = 0;
+    
+    const selectedAnswers = req.body;
+    console.log('Received answers:', selectedAnswers);
 
-    const questionIds = Object.keys(selectedAnswers)
-      .map(id => parseInt(id, 10))
-      .filter(id => !isNaN(id));
-
-    const answersResult = await db.query(`
-      SELECT 
-        a.*, 
-        ROW_NUMBER() OVER (PARTITION BY question_id ORDER BY id) - 1 as display_index 
-      FROM answers a
-      WHERE a.question_id = ANY($1::int[])
-    `, [questionIds]);
-
-    const answersByQuestion = answersResult.rows.reduce((acc, row) => {
-      acc[row.question_id] = acc[row.question_id] || [];
-      acc[row.question_id].push(row);
-      return acc;
-    }, {});
-
-    for (const [questionIdStr, answerIndex] of Object.entries(selectedAnswers)) {
-      const questionId = parseInt(questionIdStr, 10);
-      if (isNaN(questionId)) continue;
-
-      const answers = answersByQuestion[questionId] || [];
-      const selectedIndex = parseInt(answerIndex, 10);
+    for (const key in selectedAnswers) {
+      if (!key.startsWith("selectedAnswers_")) continue;
       
-      const correctAnswer = answers.find(a => a.is_correct);
+      const questionId = parseInt(key.replace("selectedAnswers_", ""), 10);
+      const answerValue = selectedAnswers[key];
+      if (!answerValue || answerValue === '') {
+        console.log(`No answer selected for question ${questionId}`);
+        continue;
+      }
+      const selectedIndex = parseInt(answerValue, 10);
+      console.log(`Checking question ${questionId}, selected index: ${selectedIndex}`);
+
+      const result = await db.query(
+        `SELECT *, ROW_NUMBER() OVER (ORDER BY id) - 1 as display_index 
+         FROM answers 
+         WHERE question_id = $1 
+         ORDER BY id`,
+        [questionId]
+      );
+      const answers = result.rows;
+      console.log(`Answers from DB for question ${questionId}:`, answers);
+
+      const correctAnswer = answers.find(a => a.is_correct === true);
       if (!correctAnswer) {
         console.error(`No correct answer for question ${questionId}`);
         continue;
       }
-            
+      
+      const correctDisplayIndex = parseInt(correctAnswer.display_index, 10);
+      console.log(`Question ${questionId}: Correct DB index: ${correctDisplayIndex}`);
+      
       total++;
-      if (selectedIndex === correctAnswer.display_index) {
+      if (selectedIndex === correctDisplayIndex) {
         correctCount++;
+        console.log(`Question ${questionId}: Correct match!`);
+      } else {
+        console.log(`Question ${questionId}: Incorrect match.`);
       }
     }
-    const questions = await getQuestions(categoryId);
-    return res.render('questions', {
-      title: 'Spurningar',
-      categoryId,
-      questions,
-      result: {
-        total,
-        correctCount,
-        message: `Þú svaraðir ${correctCount} af ${total} spurningum rétt!`
-      }
-    });
 
-     
+    res.render('quiz-result', {
+      title: 'Niðurstaða',
+      total,
+      correctCount,
+      message: `Yay, þú fékkst ${correctCount} af ${total} spurningum rétt!`
+    });
   } catch (error) {
     next(error);
   }
 }
-async function getQuestions(categoryId) {
-  const db = getDatabase();
-  const questionsResult = await db.query(
-    'SELECT * FROM questions WHERE category_id = $1',
-    [categoryId]
-  );
-  const questions = questionsResult.rows || [];
 
-  for (const question of questions) {
-    const answersResult = await db.query(
-      'SELECT * FROM answers WHERE question_id = $1 ORDER BY id',
-      [question.id]
-    );
-    question.answers = answersResult.rows;
-  }
-  
-  return questions;
-}
+router.post('/spurningar/:category(\\d+)/answer', catchErrors(answerAllQuestionsRoute));
 router.get('/', catchErrors(indexRoute));
 router.get('/spurningar/:category(\\d+)', catchErrors(categoryRoute));
 router.get('/form', catchErrors(createQuestionFormRoute));

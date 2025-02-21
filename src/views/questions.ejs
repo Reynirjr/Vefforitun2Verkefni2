@@ -18,42 +18,40 @@
         <li><a href="/">Forsíða</a></li>
         <li><a href="/form">Senda inn spurningu</a></li>
       </ul>
-    </header>
+      <%- include('header') -%>
 
-    <section class="spurningar">
-    <h2>Spurningar!</h2>
-
-    
-
-      <% if (questions.length === 0) { %>
-        <p>Engar spurningar fundust fyrir þennan flokk.</p>
-      <% } else { %>
-        <form method="post" action="/spurningar/<%= categoryId %>/answer">
+      <section class="spurningar">
+        <h2>Spurningar!</h2>
+        
+        <% if (questions.length === 0) { %>
+          <p>Engar spurningar fundust fyrir þennan flokk.</p>
+        <% } else { %>
+          <form method="post" action="/spurningar/<%= categoryId %>/answer">
             <% questions.forEach((question) => { %>
-                <div class="question">
-                  <h3><%= question.question %></h3>
-                  <% question.answers.forEach((answer, index) => { %>
-                    <div class="answer-option">
-                      <input 
-                        type="radio" 
-                        name="selectedAnswers[<%= question.id %>]" 
-                        id="q<%= question.id %>_a<%= index %>" 
-                        value="<%= index %>"
-                        required
-                      >
-                      <label for="q<%= question.id %>_a<%= index %>">
-                        <%= answer.answer %>
-                      </label>
-                    </div>
-                  <% }); %>
-                </div>
-              <% }); %>
-              <button type="submit" class="btn">Senda svar</button>
-        </form>
-      <% } %>
+              <div class="question">
+                <p class="debug">Question ID: <%= question.id %></p>
+                <h3><%= question.question %></h3>
+                <% question.answers.forEach((answer, index) => { %>
+                  <div class="answer-option">
+                    <input 
+                      type="radio" 
+                      name="selectedAnswers_<%= question.id %>" 
+                      id="q<%= question.id %>_a<%= index %>" 
+                      value="<%= index %>" 
+                      required>
+                    <label for="q<%= question.id %>_a<%= index %>">
+                      <%= answer.answer %>
+                    </label>
+                  </div>
+                <% }); %>
+              </div>
+            <% }); %>
+            <button type="submit" class="btn">Senda svar</button>
+          </form>
+        <% } %>
+        
+        <a href="/">Til baka</a>
+      </section>
       
-      <a href="/">Til baka</a>
-    </section>
-    
-    <%- include('footer') -%>
-    
+      <%- include('footer') -%>
+      
