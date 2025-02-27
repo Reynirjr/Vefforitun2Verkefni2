@@ -151,6 +151,23 @@ form{
   gap: 1em;
 }
 
+.spurningar a{
+  margin-top: 2em;
+  text-align: center;
+  text-decoration: none;
+  color: #000000;
+  font-size: large;
+  background-color: #ffd700;
+  border: 1px solid #000;
+  padding: 1em;
+  border-radius: 5px;
+}
+
+.spurningar a:hover{
+  background-color: #000000;
+  color: #ffd700;
+}
+
 .answers {
   display: flex;
   flex-direction: column;
@@ -286,6 +303,7 @@ form{
    background-size: cover;
    height: 200px;
    width: 200px;
+   z-index: -1;
    
  }
  
