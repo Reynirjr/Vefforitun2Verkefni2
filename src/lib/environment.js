@@ -1,24 +1,8 @@
-/** Default port if none provided. */
 const DEFAULT_PORT = 3000;
-
-/**
- * @typedef Environment
- * @property {number} port
- * @property {string} connectionString
- */
 
 let parsedEnv = null;
 
-/**
- * Validate the environment variables and return them as an object or `null` if
- * validation fails.
- * @param {NodeJS.ProcessEnv} env
- * @param {import('./logger').Logger} logger
- * @returns {Environment | null}
- */
 export function environment(env, logger) {
-  // If we've already parsed the environment, return the cached value
-  // i.e. this is singleton and can be called multiple times in different files
   if (parsedEnv) {
     return parsedEnv;
   }
@@ -49,8 +33,6 @@ export function environment(env, logger) {
     return null;
   }
 
-  // We know these are defined because we checked above
-  /** @type {any} */
   const connectionString = envConnectionString;
 
   parsedEnv = {

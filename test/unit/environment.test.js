@@ -10,7 +10,6 @@ describe('environment', () => {
       info: vi.fn()
     };
     
-    // Reset the module between tests to clear singleton state
     vi.resetModules();
   });
 

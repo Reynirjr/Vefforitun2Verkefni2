@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Database, getDatabase } from '../../src/lib/db.client.js';
 
-// Mock pg module
 vi.mock('pg', () => {
   const mockClient = {
     query: vi.fn(),
@@ -22,7 +21,6 @@ vi.mock('pg', () => {
   };
 });
 
-// Mock environment module
 vi.mock('../../src/lib/environment.js', () => ({
   environment: vi.fn(() => ({
     connectionString: 'postgres://test:test@localhost/test_db'
@@ -110,6 +108,6 @@ describe('getDatabase', () => {
     const db2 = getDatabase();
     
     expect(db1).toBeInstanceOf(Database);
-    expect(db1).toBe(db2); // Same instance
+    expect(db1).toBe(db2);
   });
 });

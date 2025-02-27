@@ -5,21 +5,18 @@ describe('Logger', () => {
   let originalConsole;
   
   beforeEach(() => {
-    // Save original console methods
     originalConsole = {
       info: console.info,
       warn: console.warn,
       error: console.error
     };
     
-    // Mock console methods
     console.info = vi.fn();
     console.warn = vi.fn();
     console.error = vi.fn();
   });
   
   afterEach(() => {
-    // Restore original console methods
     console.info = originalConsole.info;
     console.warn = originalConsole.warn;
     console.error = originalConsole.error;
